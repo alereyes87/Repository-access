@@ -2010,5 +2010,28 @@
   "setHeightForBmi": "Set your height in your profile to see your BMI and ideal weight",
   "@setHeightForBmi": {
     "description": "Hint shown when the profile has no height"
+  },
+  "mealReminders": "Meal reminders",
+  "@mealReminders": {
+    "description": "Title of the setting and notification channel for meal reminders"
+  },
+  "mealRemindersDescription": "A notification at the time of each meal of your current nutritional plan",
+  "@mealRemindersDescription": {
+    "description": "Explains the meal reminders setting"
+  },
+  "mealRemindersPermissionDenied": "Allow notifications for this app to get meal reminders",
+  "@mealRemindersPermissionDenied": {
+    "description": "Shown when the notification permission was refused"
+  },
+  "mealReminderTitle": "Time for {meal}",
+  "@mealReminderTitle": {
+    "description": "Title of a meal reminder notification",
+    "placeholders": {
+      "meal": { "type": "String" }
+    }
+  },
+  "mealReminderBody": "Don't forget to log what you eat in your diary",
+  "@mealReminderBody": {
+    "description": "Body of a meal reminder notification"
   }
 }
