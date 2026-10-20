@@ -17,6 +17,7 @@
  */
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:wger/core/date.dart';
 import 'package:wger/core/formatting/formatting.dart';
@@ -225,6 +226,17 @@ class DetailContentWidget extends StatelessWidget {
                 child: Row(
                   children: [
                     if (dayData.date.isSameDayAs(DateTime.now())) const Icon(Icons.today),
+                    // The weekday the server scheduled this day on, so a
+                    // weekly routine reads as "Mon: Legs, Tue: Rest..."
+                    SizedBox(
+                      width: 48,
+                      child: Text(
+                        DateFormat.E(
+                          Localizations.localeOf(context).toString(),
+                        ).format(dayData.date),
+                        style: TextStyle(color: Theme.of(context).colorScheme.primary),
+                      ),
+                    ),
                     Expanded(
                       child: Text(
                         dayData.day == null || dayData.day!.isRest

@@ -1194,5 +1194,19 @@
     "calculationHelpExercises": "Entre {min} y {max} ejercicios, {count} seleccionados.",
     "calculationHelpMaxReps": "De {min} a {max}. Las series por encima se ignoran.",
     "calculationHelpWindowDays": "De {min} a {max}. Hasta dónde cuenta la mejor serie.",
-    "useDynamicColor": "Usar color dinámico"
+    "useDynamicColor": "Usar color dinámico",
+    "bmiUnderweight": "Bajo peso",
+    "bmiNormal": "Peso saludable",
+    "bmiOverweight": "Sobrepeso",
+    "bmiObese": "Obesidad",
+    "idealWeight": "Peso ideal",
+    "idealWeightReached": "Estás dentro de tu peso ideal",
+    "idealWeightToLose": "Te faltan bajar {amount}",
+    "idealWeightToGain": "Te faltan subir {amount}",
+    "setHeightForBmi": "Cargá tu altura en el perfil para ver tu IMC y tu peso ideal",
+    "mealReminders": "Recordatorios de comidas",
+    "mealRemindersDescription": "Una notificación a la hora de cada comida de tu plan nutricional actual",
+    "mealRemindersPermissionDenied": "Permití las notificaciones de la app para recibir los recordatorios de comidas",
+    "mealReminderTitle": "Hora de: {meal}",
+    "mealReminderBody": "No te olvides de anotar lo que comés en tu diario"
 }
