@@ -29,6 +29,7 @@ import 'package:wger/features/measurements/charts/range.dart';
 import 'package:wger/features/measurements/models/unit_conversion.dart';
 import 'package:wger/features/measurements/providers/body_weight_provider.dart';
 import 'package:wger/features/measurements/screens/weight_screen.dart';
+import 'package:wger/features/measurements/widgets/body_composition_summary.dart';
 import 'package:wger/features/measurements/widgets/categories_card.dart';
 import 'package:wger/features/measurements/widgets/helpers.dart';
 import 'package:wger/features/measurements/widgets/weight_form.dart';
@@ -131,17 +132,28 @@ class DashboardWeightWidget extends ConsumerWidget {
 
     // The card the body tab shows, over the full history; the shell above
     // already titles the widget
+    final latest = points.reduce((a, b) => b.date.isAfter(a.date) ? b : a);
     return _shell(
       context,
-      CategoriesCard(
-        category,
-        elevation: 0,
-        range: ChartRange.all,
-        title: '',
-        displayUnit: weightDisplayUnit(profile.isMetric),
-        displayUnitLabel: weightUnit(profile.isMetric, context),
-        newEntryForm: WeightForm(category),
-        onShowDetails: () => Navigator.pushNamed(context, WeightScreen.routeName),
+      Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          BodyCompositionSummary(
+            weight: latest.value,
+            unit: weightDisplayUnit(profile.isMetric),
+            heightCm: profile.height,
+          ),
+          CategoriesCard(
+            category,
+            elevation: 0,
+            range: ChartRange.all,
+            title: '',
+            displayUnit: weightDisplayUnit(profile.isMetric),
+            displayUnitLabel: weightUnit(profile.isMetric, context),
+            newEntryForm: WeightForm(category),
+            onShowDetails: () => Navigator.pushNamed(context, WeightScreen.routeName),
+          ),
+        ],
       ),
     );
   }

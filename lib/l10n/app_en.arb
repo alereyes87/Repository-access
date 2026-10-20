@@ -1968,5 +1968,47 @@
       "min": { "type": "int" },
       "max": { "type": "int" }
     }
+  },
+  "bmiUnderweight": "Underweight",
+  "@bmiUnderweight": {
+    "description": "WHO BMI band below 18.5"
+  },
+  "bmiNormal": "Healthy weight",
+  "@bmiNormal": {
+    "description": "WHO BMI band 18.5 to 24.9"
+  },
+  "bmiOverweight": "Overweight",
+  "@bmiOverweight": {
+    "description": "WHO BMI band 25 to 29.9"
+  },
+  "bmiObese": "Obesity",
+  "@bmiObese": {
+    "description": "WHO BMI band 30 and above"
+  },
+  "idealWeight": "Ideal weight",
+  "@idealWeight": {
+    "description": "Weight range that keeps the BMI in the healthy band"
+  },
+  "idealWeightReached": "You are within your ideal weight",
+  "@idealWeightReached": {
+    "description": "Shown when the current weight is inside the ideal range"
+  },
+  "idealWeightToLose": "{amount} to lose",
+  "@idealWeightToLose": {
+    "description": "Weight left to lose to reach the ideal range",
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "idealWeightToGain": "{amount} to gain",
+  "@idealWeightToGain": {
+    "description": "Weight left to gain to reach the ideal range",
+    "placeholders": {
+      "amount": { "type": "String" }
+    }
+  },
+  "setHeightForBmi": "Set your height in your profile to see your BMI and ideal weight",
+  "@setHeightForBmi": {
+    "description": "Hint shown when the profile has no height"
   }
 }
