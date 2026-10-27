@@ -26,6 +26,7 @@ import 'package:wger/core/validators.dart';
 import 'package:wger/core/widgets/datetime_input.dart';
 import 'package:wger/core/widgets/decimal_input.dart';
 import 'package:wger/core/widgets/form_submit_button.dart';
+import 'package:wger/features/nutrition/models/calorie_needs.dart';
 import 'package:wger/features/nutrition/models/ingredient.dart';
 import 'package:wger/features/nutrition/models/ingredient_weight_unit.dart';
 import 'package:wger/features/nutrition/models/log.dart';
@@ -34,6 +35,7 @@ import 'package:wger/features/nutrition/models/meal_item.dart';
 import 'package:wger/features/nutrition/models/nutritional_plan.dart';
 import 'package:wger/features/nutrition/providers/nutrition_notifier.dart';
 import 'package:wger/features/nutrition/screens/nutritional_plan_screen.dart';
+import 'package:wger/features/nutrition/widgets/calorie_calculator.dart';
 import 'package:wger/features/nutrition/widgets/helpers.dart';
 import 'package:wger/features/nutrition/widgets/nutrition_tiles.dart';
 import 'package:wger/features/nutrition/widgets/widgets.dart';
@@ -510,6 +512,30 @@ class _PlanFormState extends ConsumerState<PlanForm> {
   GoalType _goalType = GoalType.meals;
   GoalType? selectedGoal;
 
+  /// Bumped when the calculator fills in the goals, so the goal fields are
+  /// rebuilt with the new values
+  int _calculation = 0;
+
+  Future<void> _openCalorieCalculator() async {
+    final targets = await showDialog<DailyTargets>(
+      context: context,
+      builder: (_) => const CalorieCalculatorDialog(),
+    );
+    if (targets == null) {
+      return;
+    }
+    setState(() {
+      widget._plan.goalEnergy = targets.energy;
+      widget._plan.goalProtein = targets.protein;
+      widget._plan.goalCarbohydrates = targets.carbohydrates;
+      widget._plan.goalFat = targets.fat;
+      if (_goalType == GoalType.meals) {
+        _goalType = GoalType.basic;
+      }
+      _calculation++;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -616,6 +642,7 @@ class _PlanFormState extends ConsumerState<PlanForm> {
               const SizedBox(width: 8),
               Expanded(
                 child: DropdownButtonFormField<GoalType>(
+                  key: ValueKey('goal-type-$_calculation'),
                   initialValue: _goalType,
                   items: GoalType.values
                       .map(
@@ -650,8 +677,18 @@ class _PlanFormState extends ConsumerState<PlanForm> {
               ),
             ],
           ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              key: const Key('calorie-calculator'),
+              icon: const Icon(Icons.calculate_outlined),
+              label: Text(AppLocalizations.of(context).calorieCalculator),
+              onPressed: _openCalorieCalculator,
+            ),
+          ),
           if (_goalType == GoalType.basic || _goalType == GoalType.advanced)
             Column(
+              key: ValueKey('goals-$_calculation'),
               children: [
                 DecimalInputWidget(
                   key: const Key('field-goal-energy'),
