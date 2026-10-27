@@ -88,8 +88,30 @@ void main() {
     expect(find.byType(Slider), findsOne);
     expect(find.byType(DropdownButtonFormField), findsNothing);
     expect(find.byType(WeightUnitInputWidget), findsNothing);
-    expect(find.byType(RepetitionUnitInputWidget), findsNothing);
+    // The unit stays available, a timed or cardio exercise needs it
+    expect(find.byType(RepetitionUnitInputWidget), findsOne);
     expect(find.byType(RiRInputWidget), findsNothing);
+  });
+
+  testWidgets('The repetitions field is labelled with the unit', (WidgetTester tester) async {
+    await tester.pumpWidget(renderWidget());
+    await tester.pumpAndSettle();
+
+    final repetitionsField = find.byKey(const ValueKey('field-repetitions'));
+    expect(
+      find.descendant(of: repetitionsField, matching: find.text('Repetitions')),
+      findsOneWidget,
+    );
+
+    await tester.tap(find.byType(RepetitionUnitInputWidget));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text(testRepetitionUnit2.name).last, warnIfMissed: false);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.descendant(of: repetitionsField, matching: find.text(testRepetitionUnit2.name)),
+      findsOneWidget,
+    );
   });
 
   testWidgets('Checks correct widgets are rendered in expanded mode', (WidgetTester tester) async {
