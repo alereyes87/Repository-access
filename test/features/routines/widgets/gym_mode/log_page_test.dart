@@ -298,5 +298,44 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.descendant(of: weightWidget, matching: find.text('1.25')), findsOneWidget);
     });
+    testWidgets('suggests a heavier weight after a complete session and fills the form', (
+      tester,
+    ) async {
+      final lastWeek = DateTime.now().subtract(const Duration(days: 7));
+      final template = testdata.getTestRoutine().logs.first;
+      when(
+        mockWorkoutLogRepo.watchLogsByExerciseDrift(
+          routineId: anyNamed('routineId'),
+          exerciseId: anyNamed('exerciseId'),
+        ),
+      ).thenAnswer(
+        (invocation) => Stream.value([
+          for (var i = 0; i < 3; i++)
+            Log(
+                id: 'suggestion-$i',
+                exerciseId: invocation.namedArguments[#exerciseId] as int,
+                date: lastWeek.add(Duration(minutes: i * 3)),
+                weight: 60,
+                repetitions: 10,
+                repetitionsTarget: 10,
+              )
+              ..repetitionUnit = template.repetitionsUnitObj
+              ..weightUnit = template.weightUnitObj,
+        ]),
+      );
+      seedLogPage(testdata.getTestRoutine());
+      await pumpLogPage(tester);
+
+      final suggestion = find.byKey(const ValueKey('weight-suggestion'));
+      expect(suggestion, findsOneWidget);
+      expect(find.text('Suggested: 62.5 kg'), findsOneWidget);
+
+      await tester.tap(suggestion);
+      await tester.pumpAndSettle();
+
+      final weightWidget = find.byKey(const ValueKey('logs-weight-widget'));
+      expect(find.descendant(of: weightWidget, matching: find.text('62.5')), findsOneWidget);
+      expect(find.byType(SnackBar), findsOneWidget);
+    });
   });
 }

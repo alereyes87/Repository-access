@@ -1227,5 +1227,9 @@
     "bodyGoalMaintain": "Mantener el peso",
     "bodyGoalGain": "Ganar músculo",
     "useTheseValues": "Usar estos valores",
-    "calculatedTargets": "{energy} kcal por día: {protein} g de proteínas, {carbohydrates} g de carbohidratos, {fat} g de grasas"
+    "calculatedTargets": "{energy} kcal por día: {protein} g de proteínas, {carbohydrates} g de carbohidratos, {fat} g de grasas",
+    "suggestedWeight": "Sugerido: {weight}",
+    "suggestedWeightIncrease": "La última vez completaste todas las series con {weight}, es hora de subir",
+    "suggestedWeightRepeat": "Seguí con {weight} hasta completar todas las repeticiones",
+    "useSuggestion": "Usar"
 }

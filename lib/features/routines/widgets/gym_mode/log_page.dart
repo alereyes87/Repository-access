@@ -28,6 +28,7 @@ import 'package:wger/features/exercises/models/exercise.dart';
 import 'package:wger/features/routines/models/log.dart';
 import 'package:wger/features/routines/models/set_config_data.dart';
 import 'package:wger/features/routines/models/slot_entry.dart';
+import 'package:wger/features/routines/models/weight_suggestion.dart';
 import 'package:wger/features/routines/providers/gym_log_notifier.dart';
 import 'package:wger/features/routines/providers/gym_state.dart';
 import 'package:wger/features/routines/providers/gym_state_notifier.dart';
@@ -155,6 +156,7 @@ class LogPage extends ConsumerWidget {
               child: LogFormWidget(
                 controller: _controller,
                 configData: setConfigData,
+                suggestion: _weightSuggestion(pastLogs, setConfigData),
                 key: ValueKey('log-form-${slotEntryPage.uuid}'),
               ),
             ),
@@ -163,6 +165,21 @@ class LogPage extends ConsumerWidget {
         NavigationFooter(_controller),
       ],
     );
+  }
+
+  /// Suggests a weight based on the last session of this exercise
+  WeightSuggestion? _weightSuggestion(AsyncValue<List<Log>> pastLogs, SetConfigData setConfigData) {
+    final suggestion = suggestNextWeight(
+      pastLogs.value ?? const <Log>[],
+      targetRepetitions: setConfigData.repetitions,
+      rounding: setConfigData.weightRounding,
+    );
+    if (suggestion == null ||
+        (setConfigData.weightUnitId != null &&
+            setConfigData.weightUnitId != suggestion.weightUnitId)) {
+      return null;
+    }
+    return suggestion;
   }
 
   /// Renders the previous logs for this exercise
@@ -178,6 +195,47 @@ class LogPage extends ConsumerWidget {
     return logs.isEmpty
         ? const SizedBox.shrink()
         : LogsPastLogsWidget(pastLogs: logs, exercise: exercise);
+  }
+}
+
+/// Compact button with the suggested weight, tapping it fills the form
+class WeightSuggestionWidget extends ConsumerWidget {
+  final WeightSuggestion suggestion;
+
+  const WeightSuggestionWidget(this.suggestion, {super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final i18n = AppLocalizations.of(context);
+    final numberFormat = localizedNumberFormat(context);
+    final unit = suggestion.weightUnitId == WEIGHT_UNIT_LB ? 'lb' : 'kg';
+    String format(num weight) => '${numberFormat.format(weight)} $unit';
+
+    final increase = suggestion.reason == WeightSuggestionReason.increase;
+    final reason = increase
+        ? i18n.suggestedWeightIncrease(format(suggestion.lastWeight))
+        : i18n.suggestedWeightRepeat(format(suggestion.lastWeight));
+
+    return Tooltip(
+      message: reason,
+      child: TextButton.icon(
+        key: const ValueKey('weight-suggestion'),
+        style: TextButton.styleFrom(
+          visualDensity: VisualDensity.compact,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          minimumSize: Size.zero,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+        ),
+        icon: Icon(increase ? Icons.trending_up : Icons.trending_flat, size: 18),
+        label: Text(i18n.suggestedWeight(format(suggestion.weight))),
+        onPressed: () {
+          ref.read(gymLogProvider.notifier).setWeight(suggestion.weight);
+          ref.read(plateCalculatorProvider.notifier).setWeight(suggestion.weight);
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          showSnackbar(context, reason);
+        },
+      ),
+    );
   }
 }
 
@@ -285,10 +343,14 @@ class LogFormWidget extends ConsumerStatefulWidget {
   final PageController controller;
   final SetConfigData configData;
 
+  /// Weight suggested from the last session, if there is one
+  final WeightSuggestion? suggestion;
+
   const LogFormWidget({
     super.key,
     required this.controller,
     required this.configData,
+    this.suggestion,
   });
 
   @override
@@ -315,10 +377,18 @@ class _LogFormWidgetState extends ConsumerState<LogFormWidget> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            i18n.newEntry,
-            style: Theme.of(context).textTheme.titleLarge,
-            textAlign: TextAlign.center,
+          Wrap(
+            alignment: WrapAlignment.center,
+            crossAxisAlignment: WrapCrossAlignment.center,
+            spacing: 8,
+            children: [
+              Text(
+                i18n.newEntry,
+                style: Theme.of(context).textTheme.titleLarge,
+                textAlign: TextAlign.center,
+              ),
+              if (widget.suggestion != null) WeightSuggestionWidget(widget.suggestion!),
+            ],
           ),
           Row(
             children: [

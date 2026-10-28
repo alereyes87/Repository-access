@@ -2115,5 +2115,28 @@
       "carbohydrates": { "type": "int" },
       "fat": { "type": "int" }
     }
+  },
+  "suggestedWeight": "Suggested: {weight}",
+  "@suggestedWeight": {
+    "description": "Weight suggested for the next set in gym mode, based on the last session",
+    "placeholders": {
+      "weight": { "type": "String" }
+    }
+  },
+  "suggestedWeightIncrease": "Every set with {weight} last time was complete, time to go up",
+  "@suggestedWeightIncrease": {
+    "placeholders": {
+      "weight": { "type": "String" }
+    }
+  },
+  "suggestedWeightRepeat": "Stay at {weight} until you complete every rep",
+  "@suggestedWeightRepeat": {
+    "placeholders": {
+      "weight": { "type": "String" }
+    }
+  },
+  "useSuggestion": "Use",
+  "@useSuggestion": {
+    "description": "Button that copies the suggested weight into the log form"
   }
 }
