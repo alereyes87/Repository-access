@@ -2154,5 +2154,30 @@
   "welcomeTitle": "Welcome!",
   "welcomeText": "Enter your weight, height and goal so the app can work out your BMI, ideal weight and daily calories.",
   "welcomeStart": "Get started",
-  "welcomeLater": "Not now"
+  "welcomeLater": "Not now",
+  "aiMealLog": "Log with AI",
+  "aiMealLogHint": "Describe what you ate, e.g. \"200 g rice and a breaded steak\"",
+  "aiAnalyze": "Analyze",
+  "aiTakePhoto": "Take a photo",
+  "aiPickPhoto": "Choose a photo",
+  "aiNoMatch": "Not found in the food database",
+  "aiNothingFound": "No food found, try describing it differently.",
+  "aiLogSelected": "Log to diary",
+  "aiEstimateNote": "The weights are estimates, check them before saving.",
+  "aiLogged": "{count} foods logged",
+  "@aiLogged": {
+    "placeholders": {
+      "count": { "type": "int" }
+    }
+  },
+  "anthropicKey": "AI key (Anthropic)",
+  "anthropicKeyDescription": "Used to log meals from a text or a photo. Each analysis costs a few cents on your Anthropic account.",
+  "anthropicKeySet": "Configured",
+  "anthropicKeyMissing": "Not configured",
+  "anthropicKeyNeeded": "To use the AI, add your Anthropic API key first.",
+  "aiErrorInvalidKey": "The AI key is not valid.",
+  "aiErrorRateLimited": "The AI is busy, try again in a moment.",
+  "aiErrorRefusal": "The AI could not analyze this.",
+  "aiErrorNetwork": "Could not reach the AI, check your connection.",
+  "aiErrorUnknown": "Something went wrong with the AI."
 }

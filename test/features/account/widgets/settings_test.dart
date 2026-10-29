@@ -88,6 +88,8 @@ void main() {
     testWidgets('Test changing the theme mode in preferences', (WidgetTester tester) async {
       await tester.pumpWidget(createSettingsScreen());
       await tester.pumpAndSettle();
+      await tester.ensureVisible(find.byKey(const ValueKey('themeModeDropdown')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('themeModeDropdown')));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Always light mode'));
@@ -100,6 +102,8 @@ void main() {
       await tester.pumpWidget(createSettingsScreen());
       await tester.pumpAndSettle();
 
+      await tester.ensureVisible(find.byKey(const ValueKey('useDynamicColorSwitch')));
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('useDynamicColorSwitch')));
       await tester.pumpAndSettle();
 

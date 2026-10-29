@@ -23,6 +23,7 @@ import 'package:wger/core/widgets/object_gone_redirect.dart';
 import 'package:wger/core/widgets/progress_indicator.dart';
 import 'package:wger/core/widgets/svg_icon.dart';
 import 'package:wger/features/nutrition/providers/nutrition_notifier.dart';
+import 'package:wger/features/nutrition/screens/ai_meal_log_screen.dart';
 import 'package:wger/features/nutrition/screens/log_meals_screen.dart';
 import 'package:wger/features/nutrition/widgets/forms.dart';
 import 'package:wger/features/nutrition/widgets/nutritional_plan_detail.dart';
@@ -60,6 +61,18 @@ class NutritionalPlanScreen extends ConsumerWidget {
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          FloatingActionButton(
+            key: const Key('ai-meal-log-fab'),
+            heroTag: null,
+            tooltip: AppLocalizations.of(context).aiMealLog,
+            onPressed: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(builder: (_) => AiMealLogScreen(nutritionalPlan)),
+              );
+            },
+            child: const Icon(Icons.auto_awesome, color: Colors.white),
+          ),
+          const SizedBox(width: 8),
           FloatingActionButton(
             heroTag: null,
             tooltip: AppLocalizations.of(context).logIngredient,

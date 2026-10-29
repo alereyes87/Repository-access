@@ -87,7 +87,7 @@
 		<key>LSRequiresIPhoneOS</key>
 		<true/>
 		<key>NSCameraUsageDescription</key>
-		<string>Workout photos</string>
+		<string>Workout and meal photos</string>
 		<key>NSHealthShareUsageDescription</key>
 		<string>wger reads your Apple Health data to import measurements and activity such as weight, body fat, blood pressure, heart rate, blood oxygen, sleep, steps, distance, and active energy into your wger account</string>
 		<!-- wger only reads from HealthKit, but health_bridge links Apple's write API

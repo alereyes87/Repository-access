@@ -25,6 +25,7 @@ import 'package:wger/core/widgets/dashboard/widgets/nothing_found.dart';
 import 'package:wger/core/widgets/error.dart';
 import 'package:wger/core/widgets/svg_icon.dart';
 import 'package:wger/features/nutrition/providers/nutrition_notifier.dart';
+import 'package:wger/features/nutrition/screens/ai_meal_log_screen.dart';
 import 'package:wger/features/nutrition/screens/log_meals_screen.dart';
 import 'package:wger/features/nutrition/screens/nutritional_plan_screen.dart';
 import 'package:wger/features/nutrition/widgets/charts.dart';
@@ -142,6 +143,16 @@ class DashboardNutritionWidget extends ConsumerWidget {
                           ),
                           Row(
                             children: [
+                              IconButton(
+                                key: const Key('dashboard-ai-meal-log'),
+                                icon: const Icon(Icons.auto_awesome),
+                                tooltip: i18n.aiMealLog,
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (_) => AiMealLogScreen(plan)),
+                                  );
+                                },
+                              ),
                               IconButton(
                                 icon: const SvgIcon('assets/icons/ingredient-diary.svg'),
                                 tooltip: i18n.logIngredient,

@@ -18,6 +18,7 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:wger/core/wide_screen_wrapper.dart';
+import 'package:wger/features/account/widgets/settings/anthropic_key.dart';
 import 'package:wger/features/account/widgets/settings/certs_not_verified.dart';
 import 'package:wger/features/account/widgets/settings/data_privacy.dart';
 import 'package:wger/features/account/widgets/settings/health_sync.dart';
@@ -62,6 +63,7 @@ class SettingsPage extends StatelessWidget {
             const SettingsDataPrivacy(),
             const HealthSyncSettingsTile(),
             const SettingsMealReminders(),
+            const SettingsAnthropicKey(),
             ListTile(title: Text(i18n.others, style: Theme.of(context).textTheme.headlineSmall)),
             const SettingsLanguage(),
             const SettingsTheme(),
