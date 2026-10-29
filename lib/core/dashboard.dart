@@ -27,6 +27,7 @@ import 'package:wger/core/widgets/dashboard/widgets/nutrition.dart';
 import 'package:wger/core/widgets/dashboard/widgets/routines.dart';
 import 'package:wger/core/widgets/dashboard/widgets/trophies.dart';
 import 'package:wger/core/widgets/dashboard/widgets/weight.dart';
+import 'package:wger/core/widgets/dashboard/widgets/welcome.dart';
 import 'package:wger/l10n/generated/app_localizations.dart';
 
 class DashboardScreen extends ConsumerWidget {
@@ -80,8 +81,10 @@ class DashboardScreen extends ConsumerWidget {
           child: isMobile
               ? ListView.builder(
                   padding: const EdgeInsets.all(10),
-                  itemBuilder: (context, index) => _getDashboardWidget(visibleWidgets[index]),
-                  itemCount: visibleWidgets.length,
+                  itemBuilder: (context, index) => index == 0
+                      ? const DashboardWelcomeWidget()
+                      : _getDashboardWidget(visibleWidgets[index - 1]),
+                  itemCount: visibleWidgets.length + 1,
                 )
               : GridView.builder(
                   padding: const EdgeInsets.all(10),

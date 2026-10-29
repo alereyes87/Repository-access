@@ -134,7 +134,7 @@ class WorkoutSessionStats extends ConsumerWidget {
 
     if (_session == null) {
       return Center(
-        child: Text('Nothing logged yet.', style: Theme.of(context).textTheme.titleMedium),
+        child: Text(i18n.nothingLoggedYet, style: Theme.of(context).textTheme.titleMedium),
       );
     }
 

@@ -18,6 +18,7 @@
 
 import 'package:material_ui/material_ui.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:wger/l10n/generated/app_localizations.dart';
 
 void launchURL(
   String url,
@@ -29,7 +30,7 @@ void launchURL(
   if (!launched && context.mounted) {
     final scaffoldMessenger = ScaffoldMessenger.of(context);
     scaffoldMessenger.showSnackBar(
-      SnackBar(content: Text('Could not open $url.')),
+      SnackBar(content: Text(AppLocalizations.of(context).couldNotOpenUrl(url))),
     );
   }
 }

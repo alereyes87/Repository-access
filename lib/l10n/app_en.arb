@@ -2138,5 +2138,21 @@
   "useSuggestion": "Use",
   "@useSuggestion": {
     "description": "Button that copies the suggested weight into the log form"
-  }
+  },
+  "entryType": "Type",
+  "@entryType": {
+    "description": "Label of the dropdown that selects the type of a day or set (normal, dropset, AMRAP…)"
+  },
+  "nothingLoggedYet": "Nothing logged yet.",
+  "noLogsAvailable": "No logs available.",
+  "couldNotOpenUrl": "Could not open {url}.",
+  "@couldNotOpenUrl": {
+    "placeholders": {
+      "url": { "type": "String" }
+    }
+  },
+  "welcomeTitle": "Welcome!",
+  "welcomeText": "Enter your weight, height and goal so the app can work out your BMI, ideal weight and daily calories.",
+  "welcomeStart": "Get started",
+  "welcomeLater": "Not now"
 }

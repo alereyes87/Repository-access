@@ -266,7 +266,7 @@ class _DayFormWidgetState extends ConsumerState<DayFormWidget> {
           DropdownButtonFormField<DayType>(
             key: const Key('field-day-type'),
             initialValue: widget.day.type,
-            decoration: const InputDecoration(labelText: 'Typ'),
+            decoration: InputDecoration(labelText: i18n.entryType),
             items: DayType.values.map((type) {
               return DropdownMenuItem(
                 key: Key('day-type-option-${type.name}'),

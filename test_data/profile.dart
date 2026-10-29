@@ -9,3 +9,6 @@ const tAccount1 = Account(
 );
 
 final tUserProfile1 = UserProfile(id: 1, weightUnitStr: 'kg');
+
+/// A profile with a height, as an established user has one
+final tUserProfileWithHeight = UserProfile(id: 1, weightUnitStr: 'kg', height: 180);

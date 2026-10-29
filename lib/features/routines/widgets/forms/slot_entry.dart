@@ -214,7 +214,7 @@ class _SlotEntryFormState extends ConsumerState<SlotEntryForm> {
             DropdownButtonFormField<SlotEntryType>(
               key: const Key('field-slot-entry-type'),
               initialValue: widget.entry.type,
-              decoration: const InputDecoration(labelText: 'Typ'),
+              decoration: InputDecoration(labelText: i18n.entryType),
               items: SlotEntryType.values.map((type) {
                 return DropdownMenuItem(
                   key: Key('slot-entry-type-option-${type.name}'),
