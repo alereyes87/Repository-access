@@ -99,7 +99,7 @@ class _LogOverviewPageState extends State<LogOverviewPage> {
           ),
           Expanded(
             child: logs.isEmpty && previousRun.isEmpty
-                ? const Center(child: Text('No logs available.'))
+                ? Center(child: Text(i18n.noLogsAvailable))
                 : ListView.builder(
                     itemCount: logs.length + previousRun.length,
                     itemBuilder: (context, index) {

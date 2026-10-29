@@ -20,7 +20,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:material_ui/material_ui.dart';
 import 'package:wger/core/app_settings_notifier.dart';
 import 'package:wger/core/widgets/decimal_input.dart';
+import 'package:wger/features/account/models/user_profile.dart';
 import 'package:wger/features/account/providers/user_profile_notifier.dart';
+import 'package:wger/features/measurements/models/measurement_entry.dart';
 import 'package:wger/features/measurements/models/unit_conversion.dart';
 import 'package:wger/features/measurements/providers/body_weight_provider.dart';
 import 'package:wger/features/measurements/providers/measurement_notifier.dart';
@@ -60,8 +62,13 @@ extension on BodyGoal {
 /// Asks for the body data the daily calories depend on, prefilled with the
 /// latest body weight, the profile height and the answers of the last time,
 /// and pops with the [DailyTargets] the user accepts.
+///
+/// With [saveBodyData] (the welcome flow) accepting also stores the weight as
+/// a new body weight entry and the height in the profile, when they changed.
 class CalorieCalculatorDialog extends ConsumerStatefulWidget {
-  const CalorieCalculatorDialog({super.key});
+  final bool saveBodyData;
+
+  const CalorieCalculatorDialog({super.key, this.saveBodyData = false});
 
   @override
   ConsumerState<CalorieCalculatorDialog> createState() => _CalorieCalculatorDialogState();
@@ -76,6 +83,8 @@ class _CalorieCalculatorDialogState extends ConsumerState<CalorieCalculatorDialo
   num? _age;
   num? _weightKg;
   num? _heightCm;
+  num? _initialWeightKg;
+  String? _weightCategoryId;
 
   @override
   void initState() {
@@ -129,6 +138,8 @@ class _CalorieCalculatorDialogState extends ConsumerState<CalorieCalculatorDialo
         to: 'kg',
       );
     }
+    _initialWeightKg = _weightKg;
+    _weightCategoryId = weightCategory?.id;
     _prefilled = true;
     return true;
   }
@@ -156,8 +167,48 @@ class _CalorieCalculatorDialogState extends ConsumerState<CalorieCalculatorDialo
     await prefs.setString(PREFS_CALORIES_ACTIVITY, _activity.name);
     await prefs.setString(PREFS_CALORIES_GOAL, _goal.name);
     await prefs.setInt(PREFS_CALORIES_AGE, _profile!.age);
+    if (widget.saveBodyData) {
+      await _saveBodyData();
+    }
     if (mounted) {
       Navigator.of(context).pop(targets);
+    }
+  }
+
+  Future<void> _saveBodyData() async {
+    final weight = _weightKg;
+    final categoryId = _weightCategoryId;
+    if (weight != null && weight != _initialWeightKg && categoryId != null) {
+      await ref
+          .read(measurementProvider.notifier)
+          .addEntry(
+            MeasurementEntry(
+              categoryId: categoryId,
+              date: DateTime.now(),
+              value: weight,
+              notes: '',
+              extraData: {'unit': 'kg'},
+            ),
+          );
+    }
+
+    final profile = ref.read(userProfileProvider).value;
+    final height = _heightCm?.round();
+    if (profile != null &&
+        height != null &&
+        height != profile.height &&
+        height >= UserProfile.minHeightCm &&
+        height <= UserProfile.maxHeightCm) {
+      await ref
+          .read(userProfileProvider.notifier)
+          .updateProfile(
+            UserProfile(
+              id: profile.id,
+              weightUnitStr: profile.weightUnitStr,
+              height: height,
+              timeZone: profile.timeZone,
+            ),
+          );
     }
   }
 
@@ -189,14 +240,14 @@ class _CalorieCalculatorDialogState extends ConsumerState<CalorieCalculatorDialo
     final targets = profile == null ? null : dailyTargets(profile);
 
     return AlertDialog(
-      title: Text(i18n.calorieCalculator),
+      title: Text(widget.saveBodyData ? i18n.welcomeTitle : i18n.calorieCalculator),
       content: !ready
           ? const SizedBox(height: 80, child: Center(child: CircularProgressIndicator()))
           : SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text(i18n.calorieCalculatorHelp),
+                  Text(widget.saveBodyData ? i18n.welcomeText : i18n.calorieCalculatorHelp),
                   _dropdown(i18n.sex, _sex, Sex.values, (v) => v.label(i18n), (v) => _sex = v),
                   DecimalInputWidget(
                     key: const Key('field-calories-age'),
@@ -261,7 +312,7 @@ class _CalorieCalculatorDialogState extends ConsumerState<CalorieCalculatorDialo
         TextButton(
           key: const Key('calories-accept'),
           onPressed: targets == null ? null : () => _accept(targets),
-          child: Text(i18n.useTheseValues),
+          child: Text(widget.saveBodyData ? i18n.save : i18n.useTheseValues),
         ),
       ],
     );

@@ -89,7 +89,7 @@ Widget createDashboardScreen({Locale? locale}) {
   final mockUserProfileRepo = MockUserProfileRepository();
   when(
     mockUserProfileRepo.watchDrift(),
-  ).thenAnswer((_) => Stream.value(tUserProfile1));
+  ).thenAnswer((_) => Stream.value(tUserProfileWithHeight));
 
   final mockRoutinesRepo = MockRoutinesRepository();
   when(

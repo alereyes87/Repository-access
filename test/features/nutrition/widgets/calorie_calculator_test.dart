@@ -19,6 +19,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:material_ui/material_ui.dart';
+import 'package:mockito/mockito.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
 import 'package:wger/features/account/models/user_profile.dart';
@@ -26,31 +27,45 @@ import 'package:wger/features/account/providers/user_profile_notifier.dart';
 import 'package:wger/features/measurements/models/measurement_entry.dart';
 import 'package:wger/features/measurements/providers/body_weight_provider.dart';
 import 'package:wger/features/measurements/providers/measurement_notifier.dart';
+import 'package:wger/features/measurements/providers/measurement_repository.dart';
 import 'package:wger/features/nutrition/models/calorie_needs.dart';
 import 'package:wger/features/nutrition/widgets/calorie_calculator.dart';
 import 'package:wger/l10n/generated/app_localizations.dart';
 import 'package:wger/l10n/localizations_delegates.dart';
 
 import '../../../../test_data/body_weight.dart';
+import '../../health/providers/health_sync_test.mocks.dart';
 
 class _StubUserProfileNotifier extends UserProfileNotifier {
+  static UserProfile? updated;
+
   @override
   Stream<UserProfile?> build() =>
       Stream.value(UserProfile(id: 1, weightUnitStr: 'kg', height: 180));
+
+  @override
+  Future<void> updateProfile(UserProfile profile) async {
+    updated = profile;
+  }
 }
 
 void main() {
   final category = getBodyWeightCategory();
   DailyTargets? result;
+  late MockMeasurementRepository measurements;
 
   setUp(() {
     SharedPreferencesAsyncPlatform.instance = InMemorySharedPreferencesAsync.empty();
     result = null;
+    _StubUserProfileNotifier.updated = null;
+    measurements = MockMeasurementRepository();
+    when(measurements.addLocalDrift(any)).thenAnswer((_) async {});
   });
 
-  Widget renderDialog() {
+  Widget renderDialog({bool saveBodyData = false}) {
     return ProviderScope(
       overrides: [
+        measurementRepositoryProvider.overrideWithValue(measurements),
         userProfileProvider.overrideWith(_StubUserProfileNotifier.new),
         bodyWeightCategoryOnlyProvider.overrideWith((ref) => Stream.value(category)),
         latestMeasurementEntriesProvider.overrideWith(
@@ -75,7 +90,7 @@ void main() {
               onPressed: () async {
                 result = await showDialog<DailyTargets>(
                   context: context,
-                  builder: (_) => const CalorieCalculatorDialog(),
+                  builder: (_) => CalorieCalculatorDialog(saveBodyData: saveBodyData),
                 );
               },
               child: const Text('open'),
@@ -108,5 +123,42 @@ void main() {
 
     expect(result?.energy, 2759);
     expect(result?.protein, 128);
+  });
+
+  testWidgets('does not touch the body data by default', (tester) async {
+    await tester.pumpWidget(renderDialog());
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+
+    await tester.enterText(find.byKey(const Key('field-calories-age')), '30');
+    await tester.enterText(find.byKey(const Key('field-calories-weight')), '78');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('calories-accept')));
+    await tester.pumpAndSettle();
+
+    verifyNever(measurements.addLocalDrift(any));
+    expect(_StubUserProfileNotifier.updated, isNull);
+  });
+
+  testWidgets('the welcome flow saves the new weight and height', (tester) async {
+    await tester.pumpWidget(renderDialog(saveBodyData: true));
+    await tester.tap(find.text('open'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Welcome!'), findsOneWidget);
+    await tester.enterText(find.byKey(const Key('field-calories-age')), '30');
+    await tester.enterText(find.byKey(const Key('field-calories-weight')), '78');
+    await tester.enterText(find.byKey(const Key('field-calories-height')), '175');
+    await tester.pumpAndSettle();
+    await tester.tap(find.byKey(const Key('calories-accept')));
+    await tester.pumpAndSettle();
+
+    final entry =
+        verify(measurements.addLocalDrift(captureAny)).captured.single as MeasurementEntry;
+    expect(entry.categoryId, category.id);
+    expect(entry.value, 78);
+    expect(entry.extraData?['unit'], 'kg');
+    expect(_StubUserProfileNotifier.updated?.height, 175);
+    expect(result, isNotNull);
   });
 }
