@@ -30,6 +30,7 @@ import 'package:wger/core/widgets/progress_indicator.dart';
 import 'package:wger/features/exercises/widgets/autocompleter.dart';
 import 'package:wger/features/routines/models/base_config.dart';
 import 'package:wger/features/routines/models/day.dart';
+import 'package:wger/features/routines/models/repetition_unit.dart';
 import 'package:wger/features/routines/models/slot.dart';
 import 'package:wger/features/routines/models/slot_entry.dart';
 import 'package:wger/features/routines/providers/routines_notifier.dart';
@@ -61,6 +62,10 @@ class _SlotEntryFormState extends ConsumerState<SlotEntryForm> {
   num? _maxWeight;
   num? _reps;
   num? _maxReps;
+
+  /// The unit the repetitions are counted in: reps, but also minutes or
+  /// kilometers for timed or cardio exercises
+  RepetitionUnit? _repetitionUnit;
   final restController = TextEditingController();
   final maxRestController = TextEditingController();
   final rirController = TextEditingController();
@@ -76,6 +81,7 @@ class _SlotEntryFormState extends ConsumerState<SlotEntryForm> {
   @override
   void initState() {
     super.initState();
+    _repetitionUnit = widget.entry.repetitionUnitObj;
     if (widget.entry.nrOfSetsConfigs.isNotEmpty) {
       setsSliderValue = widget.entry.nrOfSetsConfigs.first.value.toDouble();
     }
@@ -253,11 +259,15 @@ class _SlotEntryFormState extends ConsumerState<SlotEntryForm> {
                 ),
             ],
           ),
-          if (!widget.simpleMode)
-            RepetitionUnitInputWidget(
-              widget.entry.repetitionUnitObj,
-              onChanged: (value) => widget.entry.repetitionUnit = value,
-            ),
+          // Also in simple mode, so a timed or cardio exercise can be set up
+          // in minutes or kilometers without switching modes
+          RepetitionUnitInputWidget(
+            widget.entry.repetitionUnitObj,
+            onChanged: (value) {
+              widget.entry.repetitionUnit = value;
+              setState(() => _repetitionUnit = value);
+            },
+          ),
           Row(
             spacing: 10,
             children: [
@@ -265,7 +275,7 @@ class _SlotEntryFormState extends ConsumerState<SlotEntryForm> {
                 child: DecimalInputWidget(
                   key: const ValueKey('field-repetitions'),
                   value: _reps,
-                  labelText: i18n.repetitions,
+                  labelText: repetitionsLabel(_repetitionUnit, context),
                   min: 0,
                   max: BaseConfig.MAX_VALUE,
                   onChanged: (v) => _reps = v,

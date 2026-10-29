@@ -70,11 +70,20 @@ class _RepetitionUnitInputWidgetState extends ConsumerState<RepetitionUnitInputW
         return DropdownMenuItem<RepetitionUnit>(
           key: Key(value.id.toString()),
           value: value,
-          child: Text(value.name),
+          child: Text(getServerStringTranslation(value.name, context)),
         );
       }).toList(),
     );
   }
+}
+
+/// Label of a repetitions field: "Repetitions", or the unit itself when the
+/// exercise is counted in something else, e.g. "Minutes"
+String repetitionsLabel(RepetitionUnit? unit, BuildContext context) {
+  if (unit == null || unit.id == REP_UNIT_REPETITIONS_ID) {
+    return AppLocalizations.of(context).repetitions;
+  }
+  return getServerStringTranslation(unit.name, context);
 }
 
 /// Controlled numeric input for repetitions

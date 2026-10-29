@@ -2033,5 +2033,110 @@
   "mealReminderBody": "Don't forget to log what you eat in your diary",
   "@mealReminderBody": {
     "description": "Body of a meal reminder notification"
+  },
+  "calorieCalculator": "Calculate my calories",
+  "@calorieCalculator": {
+    "description": "Title of the daily calorie calculator"
+  },
+  "calorieCalculatorHelp": "Estimates the calories you burn per day and sets the goals of the plan for your target.",
+  "@calorieCalculatorHelp": {
+    "description": "Explains the calorie calculator"
+  },
+  "sex": "Sex",
+  "@sex": {
+    "description": "Biological sex, used for the basal metabolic rate"
+  },
+  "sexMale": "Male",
+  "@sexMale": {
+    "description": "Male"
+  },
+  "sexFemale": "Female",
+  "@sexFemale": {
+    "description": "Female"
+  },
+  "age": "Age",
+  "@age": {
+    "description": "Age in years"
+  },
+  "height": "Height",
+  "@height": {
+    "description": "Body height"
+  },
+  "activityLevel": "Activity level",
+  "@activityLevel": {
+    "description": "Activity level"
+  },
+  "activitySedentary": "Sedentary (little or no exercise)",
+  "@activitySedentary": {
+    "description": "Sedentary (little or no exercise)"
+  },
+  "activityLight": "Light (exercise 1-3 days a week)",
+  "@activityLight": {
+    "description": "Light (exercise 1-3 days a week)"
+  },
+  "activityModerate": "Moderate (exercise 3-5 days a week)",
+  "@activityModerate": {
+    "description": "Moderate (exercise 3-5 days a week)"
+  },
+  "activityActive": "Active (exercise 6-7 days a week)",
+  "@activityActive": {
+    "description": "Active (exercise 6-7 days a week)"
+  },
+  "activityVeryActive": "Very active (hard training or physical job)",
+  "@activityVeryActive": {
+    "description": "Very active (hard training or physical job)"
+  },
+  "bodyGoal": "Goal",
+  "@bodyGoal": {
+    "description": "What the user wants to do with their weight"
+  },
+  "bodyGoalLose": "Lose weight",
+  "@bodyGoalLose": {
+    "description": "Lose weight"
+  },
+  "bodyGoalMaintain": "Maintain weight",
+  "@bodyGoalMaintain": {
+    "description": "Maintain weight"
+  },
+  "bodyGoalGain": "Gain muscle",
+  "@bodyGoalGain": {
+    "description": "Gain muscle"
+  },
+  "useTheseValues": "Use these values",
+  "@useTheseValues": {
+    "description": "Use these values"
+  },
+  "calculatedTargets": "{energy} kcal a day: {protein} g protein, {carbohydrates} g carbohydrates, {fat} g fat",
+  "@calculatedTargets": {
+    "description": "Result of the calorie calculator",
+    "placeholders": {
+      "energy": { "type": "int" },
+      "protein": { "type": "int" },
+      "carbohydrates": { "type": "int" },
+      "fat": { "type": "int" }
+    }
+  },
+  "suggestedWeight": "Suggested: {weight}",
+  "@suggestedWeight": {
+    "description": "Weight suggested for the next set in gym mode, based on the last session",
+    "placeholders": {
+      "weight": { "type": "String" }
+    }
+  },
+  "suggestedWeightIncrease": "Every set with {weight} last time was complete, time to go up",
+  "@suggestedWeightIncrease": {
+    "placeholders": {
+      "weight": { "type": "String" }
+    }
+  },
+  "suggestedWeightRepeat": "Stay at {weight} until you complete every rep",
+  "@suggestedWeightRepeat": {
+    "placeholders": {
+      "weight": { "type": "String" }
+    }
+  },
+  "useSuggestion": "Use",
+  "@useSuggestion": {
+    "description": "Button that copies the suggested weight into the log form"
   }
 }

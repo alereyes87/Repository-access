@@ -44,8 +44,10 @@ enum ChartRange {
     if (days == null) {
       return null;
     }
-    final from = DateTime.now().subtract(Duration(days: days));
-    return DateTime(from.year, from.month, from.day);
+    // Calendar days rather than a Duration: across a daylight saving change a
+    // day is 23 or 25 hours, and subtracting 24h each can land on the wrong day
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day - days);
   }
 
   /// Days read beyond [cutoff], so the moving average of the first days in
@@ -70,9 +72,9 @@ enum ChartRange {
   /// the same across rebuilds, which a bound derived from the current instant
   /// would not.
   DateTime? _atMidnight(Duration lead) {
-    final from = cutoff?.subtract(lead);
+    final from = cutoff;
 
-    return from == null ? null : DateTime(from.year, from.month, from.day);
+    return from == null ? null : DateTime(from.year, from.month, from.day - lead.inDays);
   }
 
   /// Label for the selector, counted rather than one string per range, so a
