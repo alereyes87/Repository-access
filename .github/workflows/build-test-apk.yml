@@ -1,0 +1,50 @@
+name: Build test APK
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    paths:
+      - 'android/**'
+      - '.github/workflows/build-test-apk.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  build_test_apk:
+    name: Test APK
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout application
+        uses: actions/checkout@v7
+
+      - name: Common flutter setup
+        uses: ./.github/actions/flutter-common
+
+      # No store key here, so the release build is signed with the debug key
+      # and gets its own application id (see android/app/build.gradle)
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Rename APK
+        run: mv build/app/outputs/flutter-apk/app-release.apk app-gym.apk
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: app-gym-apk
+          path: app-gym.apk
+
+      # A fixed "preview" pre-release always holds the APK of the latest main,
+      # so it can be downloaded straight from the phone
+      - name: Publish to the preview release
+        if: github.event_name != 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if ! gh release view preview > /dev/null 2>&1; then
+            gh release create preview --prerelease --target "$GITHUB_SHA" \
+              --title "App GYM (prueba)" \
+              --notes "APK de prueba generado automáticamente con el último main."
+          fi
+          gh release upload preview app-gym.apk --clobber
