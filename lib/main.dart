@@ -61,6 +61,7 @@ import 'package:wger/features/measurements/screens/measurement_categories_screen
 import 'package:wger/features/measurements/screens/measurement_category_sort_screen.dart';
 import 'package:wger/features/measurements/screens/measurement_entries_screen.dart';
 import 'package:wger/features/measurements/screens/weight_screen.dart';
+import 'package:wger/features/nutrition/providers/meal_reminders.dart';
 import 'package:wger/features/nutrition/screens/ingredient_detail_screen.dart';
 import 'package:wger/features/nutrition/screens/ingredients_screen.dart';
 import 'package:wger/features/nutrition/screens/log_meal_screen.dart';
@@ -207,6 +208,8 @@ class MainApp extends ConsumerWidget {
     // Instantiates the singleton on first build; the provider subscribes to
     // incoming deep links as a side effect of being read.
     ref.watch(appLinkRouterProvider);
+    // Keeps the meal reminders in step with the current nutritional plan
+    ref.watch(mealRemindersProvider);
 
     // Read before the builder below: its callback runs during the child's
     // build, where ref.watch would be out of phase.

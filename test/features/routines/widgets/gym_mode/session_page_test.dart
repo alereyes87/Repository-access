@@ -135,16 +135,19 @@ void main() {
       workoutStart: DateTime(2021, 5, 1, 13, 35),
     );
 
-    // Act
-    await tester.pumpWidget(renderSessionPage());
-    await tester.pumpAndSettle();
+    // A fixed clock, so the minute cannot roll over between building the
+    // page and reading "now" below
+    await withClock(Clock.fixed(DateTime(2021, 5, 1, 15, 23)), () async {
+      // Act
+      await tester.pumpWidget(renderSessionPage());
+      await tester.pumpAndSettle();
 
-    // Assert
-    final timeNow = TimeOfDay.now().format(tester.element(find.byType(TextFormField).first));
-    expect(find.text('1:35 PM'), findsOneWidget);
-    expect(find.text(timeNow), findsOneWidget);
-    final toggleButtons = tester.widget<ToggleButtons>(find.byType(ToggleButtons));
-    expect(toggleButtons.isSelected[1], isTrue);
+      // Assert
+      expect(find.text('1:35 PM'), findsOneWidget);
+      expect(find.text('3:23 PM'), findsOneWidget);
+      final toggleButtons = tester.widget<ToggleButtons>(find.byType(ToggleButtons));
+      expect(toggleButtons.isSelected[1], isTrue);
+    });
   });
 
   testWidgets('Test that correct data is send to server', (WidgetTester tester) async {
